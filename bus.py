@@ -8,7 +8,7 @@ import time
 
 #27 CARRAS / PROMENADE
 #9  ALBERT 1er VERDUN
-stationNumber = 9
+stationNumber = 27
 patternBus = "<div class=\"data\">\s*?<span class=\"txtbold\">Ligne</span> : (?P<line>.+?)\s*?<div>(?P<timesheet>.*?)\s*?</div>\s*?</div>"
 patternTime = "(?P<time>.+?)direction <span class=\"txtbold\">(?P<direction>.+?)</span>(?P<isRealtime>.*?)<br />"
 
