@@ -30,12 +30,20 @@ def getTime(timeSection):
     
 def getTimeNow(text):
     patternTimeNow = re.compile("<span>Il est</span>\s*?<span class=\"txtbold\">.+?</span>")
-    timeNowSection = re.search(patternTimeNow, text).group()
-    timeNow = re.search(r'\d\d?h\d\d', timeNowSection).group()
+    timeGroup = re.search(patternTimeNow, text)
+    timeNow = None
+    if timeGroup:
+        timeNowSection = timeGroup.group()
+        timeNow = re.search(r'\d\d?h\d\d', timeNowSection).group()
     return timeNow
 
 def getAll(content):
-    print "Now is " + getTimeNow(content) + "\n"
+    now = getTimeNow(content)
+    if now:
+        print "Now is " + now + "\n"
+    else:
+        print "No tracking available"
+        return
     
     for busMatches in re.finditer(patternBus, content, re.IGNORECASE | re.DOTALL):    #for each line of bus
         print "Bus " + busMatches.group('line') + " is comming"
@@ -47,6 +55,7 @@ def getAll(content):
                   timeMatches.group('isRealtime').strip())
                   
 def getInfoByStation(station):
+    print "Checking ..."
     content = urllib.urlopen("https://cg06.tsi.cityway.fr/qrcode/" + str(station)).read()
     #print content
     getAll(content)
