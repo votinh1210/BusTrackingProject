@@ -6,9 +6,10 @@ import os
 import time
 
 
-#27 CARRAS / PROMENADE
-#9  ALBERT 1er VERDUN
-stationNumber = 27
+#27 	CARRAS / PROMENADE
+#9  	ALBERT 1er VERDUN
+#2064  	LES TEMPLIERS
+#2155 	SKEMA
 patternBus = "<div class=\"data\">\s*?<span class=\"txtbold\">Ligne</span> : (?P<line>.+?)\s*?<div>(?P<timesheet>.*?)\s*?</div>\s*?</div>"
 patternTime = "(?P<time>.+?)direction <span class=\"txtbold\">(?P<direction>.+?)</span>(?P<isRealtime>.*?)<br />"
 
@@ -61,6 +62,7 @@ def getInfoByStation(station):
     getAll(content)
     
 def main():
+    stationNumber = raw_input("Station number: ")
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
         getInfoByStation(stationNumber)
