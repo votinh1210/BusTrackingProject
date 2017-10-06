@@ -6,10 +6,23 @@ import os
 import time
 
 
-#27 	CARRAS / PROMENADE
+#######      Sophia - Nice      #######
 #9  	ALBERT 1er VERDUN
 #2064  	LES TEMPLIERS
 #2155 	SKEMA
+
+
+#######      Nice - Sophia      #######
+#81     LYCEE MASSENA
+#43     GUSTAVE V
+#32     GAMBETTA / PROMENADE
+#84     MAGNAN / PROMENADE
+#25     FABRON MUSEE D'ART NAIF
+#27 	CARRAS / PROMENADE
+#968    FERBER / PROMENADE
+#4      AEROPORT / PROMENADE
+#2148   SANTOLINE
+
 patternBus = "<div class=\"data\">\s*?<span class=\"txtbold\">Ligne</span> : (?P<line>.+?)\s*?<div>(?P<timesheet>.*?)\s*?</div>\s*?</div>"
 patternTime = "(?P<time>.+?)direction <span class=\"txtbold\">(?P<direction>.+?)</span>(?P<isRealtime>.*?)<br />"
 
@@ -39,6 +52,7 @@ def getTimeNow(text):
     return timeNow
 
 def getAll(content):
+    lineNeedToTrack = 500
     now = getTimeNow(content)
     if now:
         print "Now is " + now + "\n"
@@ -47,7 +61,10 @@ def getAll(content):
         return
     
     for busMatches in re.finditer(patternBus, content, re.IGNORECASE | re.DOTALL):    #for each line of bus
-        print "Bus " + busMatches.group('line') + " is comming"
+        line = busMatches.group('line')
+        if line != lineNeedToTrack:
+            continue
+        print "Bus " + line + " is comming"
         for timeMatches in re.finditer(patternTime, busMatches.group('timesheet'), re.IGNORECASE | re.DOTALL):    #for each line in timesheet
             busTime = getTime(timeMatches.group('time'))
             timeMatches.group('direction')
