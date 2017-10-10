@@ -7,9 +7,9 @@ import time
 
 
 #######      Sophia - Nice      #######
-#9  	ALBERT 1er VERDUN
-#2064  	LES TEMPLIERS
-#2155 	SKEMA
+#9      ALBERT 1er VERDUN
+#2064      LES TEMPLIERS
+#2155     SKEMA
 
 
 #######      Nice - Sophia      #######
@@ -18,7 +18,7 @@ import time
 #32     GAMBETTA / PROMENADE
 #84     MAGNAN / PROMENADE
 #25     FABRON MUSEE D'ART NAIF
-#27 	CARRAS / PROMENADE
+#27     CARRAS / PROMENADE
 #968    FERBER / PROMENADE
 #4      AEROPORT / PROMENADE
 #2148   SANTOLINE
@@ -52,7 +52,7 @@ def getTimeNow(text):
     return timeNow
 
 def getAll(content):
-    lineNeedToTrack = 500
+    lineNeedToTrack = '230'
     now = getTimeNow(content)
     if now:
         print "Now is " + now + "\n"
@@ -67,9 +67,11 @@ def getAll(content):
         print "Bus " + line + " is comming"
         for timeMatches in re.finditer(patternTime, busMatches.group('timesheet'), re.IGNORECASE | re.DOTALL):    #for each line in timesheet
             busTime = getTime(timeMatches.group('time'))
-            timeMatches.group('direction')
+            direction = timeMatches.group('direction')
+            if 'drale-Vieille Ville' not in direction:
+                continue
             print (("\tat " if 'h' in busTime else "\tin ") + busTime + " min direction " + 
-                  timeMatches.group('direction') +
+                  direction +
                   timeMatches.group('isRealtime').strip())
                   
 def getInfoByStation(station):
