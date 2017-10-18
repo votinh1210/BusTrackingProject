@@ -10,8 +10,21 @@ from collections import OrderedDict
 #9      ALBERT 1er VERDUN
 
 mappingStationSophiaNice = OrderedDict()
+mappingStationSophiaNice['2157']=   'SOPHIA   '
+mappingStationSophiaNice['2037']=   'CARDOULIN'
+mappingStationSophiaNice['1919']=   'GARBEJAIR'
+mappingStationSophiaNice['2117']=   'POMPIDOU '
+mappingStationSophiaNice['2035']=   'BRUSCS   '
+mappingStationSophiaNice['1897']=   'EGANAUDE '
+mappingStationSophiaNice['1942']=   'BOUILLIDE'
+mappingStationSophiaNice['2159']=   'SOPHIE L '
 mappingStationSophiaNice['2155']=   'SKEMA    '
+mappingStationSophiaNice['2032']=   'BELUGUES '
+mappingStationSophiaNice['1852']=   'CAQUOT   '
+mappingStationSophiaNice['1939']=   'INRIA    '
 mappingStationSophiaNice['2064']=   'TEMPLIERS'
+mappingStationSophiaNice['2039']=   'CHAPPES  '
+mappingStationSophiaNice['2414']=   '3 MOULINS'
 
 mappingStationNiceSophia = OrderedDict()
 mappingStationNiceSophia['81']=   'MASSENA  '
@@ -27,7 +40,7 @@ mappingStationNiceSophia['2148']= 'SANTOLINE'
 timeSheetNiceSophia = OrderedDict()
 
 lineNeedToTrack = '230'
-destinationToTrack = 'Sophia'  
+destinationToTrack = 'Vieille Ville'  
 timeCheck = 0
     
     
@@ -85,26 +98,29 @@ def show():
     os.system('cls' if os.name == 'nt' else 'clear')
     print ("Bus " + lineNeedToTrack + " direction " + destinationToTrack)
     for stationNumber in timeSheetNiceSophia.keys():
-        print (mappingStationNiceSophia[stationNumber] , end='\t')
+        print (mappingStationSophiaNice[stationNumber] , end='\t')
         for time_t in timeSheetNiceSophia[stationNumber]:
             print (time_t, end='\t')
         print ('...')
         
 def reorganizeBusTime():
-    nextBus = timeSheetNiceSophia[len(timeSheetNiceSophia)-1][0]
+    nextBus = next(reversed(timeSheetNiceSophia))[0]
     if 'h' in nextBus:
         for stationNumber in reversed(timeSheetNiceSophia.keys()):
-            if (nextBus == 'passed' or timeSheetNiceSophia[stationNumber][0] > nextBus):
+            print (nextBus)
+            if (nextBus == 'passed' or timeSheetNiceSophia[stationNumber][0] > nextBus or nextBus == 'now'):
                 timeSheetNiceSophia[stationNumber].insert(0, 'passed')
             nextBus = timeSheetNiceSophia[stationNumber][0]
+    time.sleep(10)
         
 def main():
     while True:
         startTimer = time.time()
         print ("Checking...")
         timeSheetNiceSophia.clear()#clear list hours
-        for stationNumber in mappingStationNiceSophia.keys():
+        for stationNumber in mappingStationSophiaNice.keys():
             getInfoByStation(stationNumber)
+        #reorganizeBusTime()
         show()
         elapsedTimer = time.time() - startTimer
         print ("Time execution: " + str(round(elapsedTimer,2)) + "s")
