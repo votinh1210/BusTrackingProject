@@ -10,39 +10,47 @@ from collections import OrderedDict
 
 #9      ALBERT 1er VERDUN
 
-mappingStationSophiaNice = OrderedDict()
-mappingStationSophiaNice['2157']=   'SOPHIA   '
-mappingStationSophiaNice['2037']=   'CARDOULIN'
-mappingStationSophiaNice['1919']=   'GARBEJAIR'
-mappingStationSophiaNice['2117']=   'POMPIDOU '
-mappingStationSophiaNice['2035']=   'BRUSCS   '
-mappingStationSophiaNice['1897']=   'EGANAUDE '
-mappingStationSophiaNice['1942']=   'BOUILLIDE'
-mappingStationSophiaNice['2159']=   'SOPHIE L '
-mappingStationSophiaNice['2155']=   'SKEMA    '
-mappingStationSophiaNice['2032']=   'BELUGUES '
-mappingStationSophiaNice['1852']=   'CAQUOT   '
-mappingStationSophiaNice['1939']=   'INRIA    '
-mappingStationSophiaNice['2064']=   'TEMPLIERS'
-mappingStationSophiaNice['2039']=   'CHAPPES  '
-mappingStationSophiaNice['2414']=   '3 MOULINS'
-
-mappingStationNiceSophia = OrderedDict()
-mappingStationNiceSophia['81']=   'MASSENA  '
-mappingStationNiceSophia['43']=   'GUSTAVE  '
-mappingStationNiceSophia['32']=   'GAMBETTA '
-mappingStationNiceSophia['84']=   'MAGNAN   '
-mappingStationNiceSophia['25']=   'FABRON   '
-mappingStationNiceSophia['27']=   'CARRAS   '
-mappingStationNiceSophia['56']=   'VALLIERE '
-mappingStationNiceSophia['4']=    'AEROPORT '
-mappingStationNiceSophia['2148']= 'SANTOLINE'
-
-timeSheetNiceSophia = OrderedDict()
+timeSheetNiceSophia = OrderedDict() #time table
 
 lineNeedToTrack = '230'
-destinationToTrack = 'Sophia Gare Routi'  
-timeCheck = 0
+
+if datetime.datetime.now().time() < datetime.time(12):
+    destinationToTrack = 'Sophia Gare Routière'  
+    stationToTrack = '27'
+    timeCheck = '10'
+    
+    mappingStationNiceSophia = OrderedDict()
+    mappingStationNiceSophia['81']=   'MASSENA  '
+    mappingStationNiceSophia['43']=   'GUSTAVE  '
+    mappingStationNiceSophia['32']=   'GAMBETTA '
+    mappingStationNiceSophia['84']=   'MAGNAN   '
+    mappingStationNiceSophia['25']=   'FABRON   '
+    mappingStationNiceSophia['27']=   'CARRAS   '
+    mappingStationNiceSophia['56']=   'VALLIERE '
+    mappingStationNiceSophia['4']=    'AEROPORT '
+    mappingStationNiceSophia['2148']= 'SANTOLINE'
+else:
+    destinationToTrack = 'Cathédrale-Vieille Ville' 
+    stationToTrack = '2064'
+    timeCheck = '7'
+    
+    mappingStationNiceSophia = OrderedDict()
+    mappingStationNiceSophia['2157']=   'SOPHIA   '
+    mappingStationNiceSophia['2037']=   'CARDOULIN'
+    mappingStationNiceSophia['1919']=   'GARBEJAIR'
+    mappingStationNiceSophia['2117']=   'POMPIDOU '
+    mappingStationNiceSophia['2035']=   'BRUSCS   '
+    mappingStationNiceSophia['1897']=   'EGANAUDE '
+    mappingStationNiceSophia['1942']=   'BOUILLIDE'
+    mappingStationNiceSophia['2159']=   'SOPHIE L '
+    mappingStationNiceSophia['2155']=   'SKEMA    '
+    mappingStationNiceSophia['2032']=   'BELUGUES '
+    mappingStationNiceSophia['1852']=   'CAQUOT   '
+    mappingStationNiceSophia['1939']=   'INRIA    '
+    mappingStationNiceSophia['2064']=   'TEMPLIERS'
+    mappingStationNiceSophia['2039']=   'CHAPPES  '
+    mappingStationNiceSophia['2414']=   '3 MOULINS'
+
 notifSentTime = 'timeNotifIsSent'
     
     
@@ -79,7 +87,6 @@ def getTimeNow(text):
 def getAll(content, station):
     now = getTimeNow(content)
     if now:
-        timeCheck = datetime.datetime.strptime(now, "%Hh%M")
         #for each line of bus
         for busMatches in re.finditer(patternBus, content, re.IGNORECASE | re.DOTALL):    
             line = busMatches.group('line')
@@ -112,7 +119,7 @@ def notif(station):
         global notifSentTime
         while '*' in timeSheetNiceSophia[station][i] and i<len(timeSheetNiceSophia[station])-1:
             i=i+1
-        if timeSheetNiceSophia[station][i] != notifSentTime and timeSheetNiceSophia[station][i] == setTimeToStandardFormat('7'):
+        if timeSheetNiceSophia[station][i] != notifSentTime and timeSheetNiceSophia[station][i] == setTimeToStandardFormat(timeCheck):
             requests.post("https://maker.ifttt.com/trigger/buscomming/with/key/GrY7zljRcKbwitY4U5lts")
             notifSentTime = timeSheetNiceSophia[station][i]
             print ("NOTIFICATION SENT")
@@ -122,8 +129,8 @@ def main():
         startTimer = time.time()
         print ("Checking...")
         timeSheetNiceSophia.clear()#clear list hours
-        getInfoByStation('27')
-        notif('27')
+        getInfoByStation(stationToTrack)
+        notif(stationToTrack)
         show()
         elapsedTimer = time.time() - startTimer
         print ("Time execution: " + str(round(elapsedTimer,2)) + "s")
