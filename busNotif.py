@@ -17,7 +17,7 @@ lineNeedToTrack = '230'
 if datetime.datetime.now().time() < datetime.time(12):
     destinationToTrack = 'Sophia Gare Routière'  
     stationToTrack = '27'
-    timeCheck = '10'
+    timeCheck = 9
     
     mappingStationNiceSophia = OrderedDict()
     mappingStationNiceSophia['81']=   'MASSENA  '
@@ -32,7 +32,7 @@ if datetime.datetime.now().time() < datetime.time(12):
 else:
     destinationToTrack = 'Cathédrale-Vieille Ville' 
     stationToTrack = '2064'
-    timeCheck = '7'
+    timeCheck = 7
     
     mappingStationNiceSophia = OrderedDict()
     mappingStationNiceSophia['2157']=   'SOPHIA   '
@@ -119,10 +119,16 @@ def notif(station):
         global notifSentTime
         while '*' in timeSheetNiceSophia[station][i] and i<len(timeSheetNiceSophia[station])-1:
             i=i+1
-        if timeSheetNiceSophia[station][i] != notifSentTime and timeSheetNiceSophia[station][i] == setTimeToStandardFormat(timeCheck):
-            requests.post("https://maker.ifttt.com/trigger/buscomming/with/key/GrY7zljRcKbwitY4U5lts")
-            notifSentTime = timeSheetNiceSophia[station][i]
-            print ("NOTIFICATION SENT")
+        if timeSheetNiceSophia[station][i] != notifSentTime:
+            if timeSheetNiceSophia[station][i] == setTimeToStandardFormat(str(timeCheck+1)):
+                requests.post("https://maker.ifttt.com/trigger/bus230/with/key/GrY7zljRcKbwitY4U5lts?value1="+str(timeCheck+1))
+                notifSentTime = timeSheetNiceSophia[station][i]
+            elif timeSheetNiceSophia[station][i] == setTimeToStandardFormat(str(timeCheck)):
+                requests.post("https://maker.ifttt.com/trigger/bus230/with/key/GrY7zljRcKbwitY4U5lts?value1="+str(timeCheck))
+                notifSentTime = timeSheetNiceSophia[station][i]
+            elif timeSheetNiceSophia[station][i] == setTimeToStandardFormat(str(timeCheck-1)):
+                requests.post("https://maker.ifttt.com/trigger/bus230/with/key/GrY7zljRcKbwitY4U5lts?value1="+str(timeCheck-1))
+                notifSentTime = timeSheetNiceSophia[station][i]
         
 def main():
     while True:
