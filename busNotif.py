@@ -105,16 +105,6 @@ def show():
         for time_t in timeSheetNiceSophia[stationNumber]:
             print (time_t, end='\t')
         print ('...')
-        
-def reorganizeBusTime():
-    nextBus = next(reversed(timeSheetNiceSophia))[0]
-    if 'h' in nextBus:
-        for stationNumber in reversed(timeSheetNiceSophia.keys()):
-            print (nextBus)
-            if (nextBus == 'passed' or timeSheetNiceSophia[stationNumber][0] > nextBus or nextBus == 'now'):
-                timeSheetNiceSophia[stationNumber].insert(0, 'passed')
-            nextBus = timeSheetNiceSophia[stationNumber][0]
-    time.sleep(10)
     
 def notif(station):
     if station in timeSheetNiceSophia.keys() and len(timeSheetNiceSophia[station]) != 0:
@@ -132,9 +122,6 @@ def main():
         startTimer = time.time()
         print ("Checking...")
         timeSheetNiceSophia.clear()#clear list hours
-        #for stationNumber in mappingStationNiceSophia.keys():
-        #    getInfoByStation(stationNumber)
-        #reorganizeBusTime()
         getInfoByStation('27')
         notif('27')
         show()
