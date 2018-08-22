@@ -134,7 +134,9 @@ def addingPassedBus():
                 isNeedCleanUp = True
                 
         if previousStation != 'null'\
+           and len(timeSheetNiceSophia[previousStation]) != 0\
            and timeSheetNiceSophia[previousStation][0] != 'now'\
+           and len(timeSheetNiceSophia[stationNumber]) != 0\
            and (timeSheetNiceSophia[stationNumber][0] == 'now'\
                 or timeSheetNiceSophia[stationNumber][0] < timeSheetNiceSophia[previousStation][0]):
             for stationBefore in timeSheetNiceSophia.keys():
