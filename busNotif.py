@@ -6,6 +6,7 @@ import re
 import os
 import time
 import datetime
+import traceback
 from collections import OrderedDict
 
 #9      ALBERT 1er VERDUN
@@ -131,17 +132,30 @@ def notif(station):
                 notifSentTime = timeSheetNiceSophia[station][i]
         
 def main():
-    while True:
-        startTimer = time.time()
-        print ("Checking...")
-        timeSheetNiceSophia.clear()#clear list hours
-        getInfoByStation(stationToTrack)
-        notif(stationToTrack)
-        show()
-        elapsedTimer = time.time() - startTimer
-        print ("Time execution: " + str(round(elapsedTimer,2)) + "s")
-        sleepTime = max(0,20 - elapsedTimer)
-        time.sleep(sleepTime)
+    try:
+        while True:
+            startTimer = time.time()
+            print ("Checking...")
+            timeSheetNiceSophia.clear()#clear list hours
+            getInfoByStation(stationToTrack)
+            notif(stationToTrack)
+            show()
+            elapsedTimer = time.time() - startTimer
+            print ("Time execution: " + str(round(elapsedTimer,2)) + "s")
+            sleepTime = max(0,20 - elapsedTimer)
+            time.sleep(sleepTime)
+            
+    except BaseException as e:
+        dumpfile = "C://PROJECTS//BusTrackingProject//dumpfile.dump"
+        f = open(dumpfile, "w")
+        f.write(str(e) + '\n')
+        f.write(traceback.format_exc())
+        f.write("Bus " + lineNeedToTrack + " direction " + destinationToTrack + '\n')
+        for stationNumber in timeSheetNiceSophia.keys():
+            line = mappingStationNiceSophia[stationNumber] + '\t'
+            for time_t in timeSheetNiceSophia[stationNumber]:
+                line = line + time_t + '\t'
+            f.write(line + '\n')
         
 if __name__ == "__main__": 
     main()
